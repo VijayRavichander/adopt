@@ -1,11 +1,11 @@
-import { Dog } from "@/app/search/page";
+import { DogWithLocation } from "@/app/search/page";
 import { useFavoriteDogs } from "@/hooks/favorites";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import DogCard from "./OverlayCard";
 
 
-export default function Hero({ dogs }: { dogs: Dog[] }) {
+export default function Hero({ dogs }: { dogs: DogWithLocation[] }) {
 
   const { favorites, toggle } = useFavoriteDogs();
 

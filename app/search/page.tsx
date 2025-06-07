@@ -20,17 +20,25 @@ export interface Dog {
   breed: string;
 }
 
-export interface Location {
-    lat: number;
-    lon: number
+export interface CurrentLocation {
+  lat: number;
+  lon: number;
 }
 
-import { Suspense } from 'react'
+export interface Location {
+  zip_code: string; // backend must include ZIP so we can match
+  city: string;
+  state: string;
+  lat: number;
+  lon: number;
+}
+
+export type DogWithLocation = Dog & { location?: Location };
 
 export default function Search() {
-  const [dogs, setDogs] = useState<Dog[]>([]);
+  const [dogs, setDogs] = useState<DogWithLocation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [location, setLocation] = useState<Location>({ lat: 0, lon: 0 });
+  const [location, setLocation] = useState<CurrentLocation>({ lat: 0, lon: 0 });
   const [total, setTotal] = useState(0);
   const [filterHide, setFilterHide] = useState(false);
 
@@ -61,7 +69,34 @@ export default function Search() {
         const detailRes = await axios.post(`${BACKEND_URL}/dogs`, ids, {
           withCredentials: true,
         });
-        setDogs(detailRes.data);
+
+        const detailedDogs: Dog[] = detailRes.data;
+        const uniqueZips = [...new Set(detailedDogs.map((d) => d.zip_code))];
+
+        const chunked = (arr: string[], size: number) =>
+          Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+            arr.slice(i * size, i * size + size)
+          );
+
+        const locationPromises = chunked(uniqueZips, 100).map((chunk) =>
+          axios.post(`${BACKEND_URL}/locations`, chunk, {
+            withCredentials: true,
+          })
+        );
+
+        const locationResponses = await Promise.all(locationPromises);
+        const locations: Location[] = locationResponses.flatMap((r) => r.data);
+
+        const zipToLocation = new Map(
+          locations.map((loc) => [loc.zip_code, loc] as const)
+        );
+
+        const dogsWithLocation: DogWithLocation[] = detailedDogs.map((dog) => ({
+          ...dog,
+          location: zipToLocation.get(dog.zip_code),
+        }));
+
+        setDogs(dogsWithLocation);
 
         setIsLoading(false);
       } catch {
@@ -96,9 +131,9 @@ export default function Search() {
                    ring-1 ring-white/40"
           >
             <p className="text-xl sm:text-3xl font-medium tracking-tight text-black/90">
-            <Link href="/search">
-              <Dog className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
-            </Link>
+              <Link href="/search">
+                <Dog className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
+              </Link>
             </p>
 
             <div className="flex space-x-4">
@@ -112,7 +147,9 @@ export default function Search() {
               </Link>
               <Button
                 variant="ghost"
-                className={`text-xl hover:bg-transparent hover:underline ${filterHide ? "" : "underline"}`}
+                className={`text-xl hover:bg-transparent hover:underline ${
+                  filterHide ? "" : "underline"
+                }`}
                 onClick={() => setFilterHide((v) => !v)}
               >
                 Filter
@@ -134,10 +171,7 @@ export default function Search() {
                           : "translate-x-0 opacity-100"
                       }`}
         >
-          <Filter
-            location={location}
-            setLocation={setLocation}
-          />
+          <Filter location={location} setLocation={setLocation} />
         </div>
 
         <div

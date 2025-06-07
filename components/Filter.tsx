@@ -21,14 +21,14 @@ interface BreedItem {
   toggle: boolean;
 }
 
-import { Location } from "@/app/search/page";
+import { CurrentLocation } from "@/app/search/page";
 
 export default function Filter({
   location,
   setLocation,
 }: {
-  location: Location;
-  setLocation: React.Dispatch<React.SetStateAction<Location>>;
+  location: CurrentLocation;
+  setLocation: React.Dispatch<React.SetStateAction<CurrentLocation>>;
 }) {
   const [breeds, setBreeds] = useState<BreedItem[]>([]);
   const [sortAsc, setSortAsc] = useState<string>("asc");

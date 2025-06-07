@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Dog } from "@/app/search/page";
+import { DogWithLocation } from "@/app/search/page";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import { Heart, MapPin } from "lucide-react";
 import { toast } from "sonner";
 
 interface DogCardProps {
-  dog: Dog;
+  dog: DogWithLocation;
   favorites: Set<string>;
   toggle: (id: string) => void;
   triggerOpen?: boolean;
@@ -84,7 +84,7 @@ export default function DogCard({
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold">{dog.name}</DialogTitle>
             <DialogDescription className="flex items-center gap-2 text-base">
-              <MapPin className="w-4 h-4" /> {dog.zip_code}
+              <MapPin className="w-4 h-4" /> {dog.location?.city}, {dog.location?.state}
             </DialogDescription>
           </DialogHeader>
 

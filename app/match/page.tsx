@@ -9,13 +9,13 @@ import DogCard from "@/components/OverlayCard";
 import { Dog as DogIcon, PawPrint } from "lucide-react";
 import confetti from "canvas-confetti";
 import Link from "next/link";
-import { Dog } from "../search/page";
+import { DogWithLocation, Dog, Location} from "../search/page";
 
 
 export default function FavoritesPage() {
 
   const [matchId, setMatchId] = useState<string>();
-  const [favDogs, setFavDogs] = useState<Dog[]>();
+  const [favDogs, setFavDogs] = useState<DogWithLocation[]>();
   const { favorites, toggle } = useFavoriteDogs();
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -41,7 +41,33 @@ export default function FavoritesPage() {
               withCredentials: true,
             }
           );
-          setFavDogs(dog_data_response.data);
+          const detailedDogs: Dog[] = dog_data_response.data;
+          const uniqueZips = [...new Set(detailedDogs.map((d) => d.zip_code))];
+  
+          const chunked = (arr: string[], size: number) =>
+            Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
+              arr.slice(i * size, i * size + size)
+            );
+  
+          const locationPromises = chunked(uniqueZips, 100).map((chunk) =>
+            axios.post(`${BACKEND_URL}/locations`, chunk, {
+              withCredentials: true,
+            })
+          );
+  
+          const locationResponses = await Promise.all(locationPromises);
+          const locations: Location[] = locationResponses.flatMap((r) => r.data);
+  
+          const zipToLocation = new Map(
+            locations.map((loc) => [loc.zip_code, loc] as const)
+          );
+  
+          const dogsWithLocation: DogWithLocation[] = detailedDogs.map((dog) => ({
+            ...dog,
+            location: zipToLocation.get(dog.zip_code),
+          }));
+  
+          setFavDogs(dogsWithLocation);
         }
         const timer = setTimeout(() => {
           setIsLoading(false);
