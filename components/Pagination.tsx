@@ -20,7 +20,6 @@ export default function PaginationComp({
   const totalPages = Math.ceil(totalResults / PAGE_SIZE);
 
   const searchParams = useSearchParams();
-  const router = useRouter();
   const pathname = usePathname();
 
   const from = Number(searchParams.get('from'));

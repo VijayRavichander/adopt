@@ -25,6 +25,8 @@ export interface Location {
     lon: number
 }
 
+import { Suspense } from 'react'
+
 export default function Search() {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [isLoading, setIsLoading] = useState(true);

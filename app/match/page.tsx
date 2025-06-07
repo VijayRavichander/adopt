@@ -6,15 +6,14 @@ import { useCallback, useEffect, useState } from "react";
 import { BACKEND_URL } from "../config";
 import { useFavoriteDogs } from "@/hooks/favorites";
 import DogCard from "@/components/OverlayCard";
-import { Dog as DogIcon, House, PawPrint } from "lucide-react";
+import { Dog as DogIcon, PawPrint } from "lucide-react";
 import confetti from "canvas-confetti";
 import Link from "next/link";
 import { Dog } from "../search/page";
 
-const STORAGE_KEY = "favoriteDogIds"; // must match the key you write in the toggle logic
 
 export default function FavoritesPage() {
-  
+
   const [matchId, setMatchId] = useState<string>();
   const [favDogs, setFavDogs] = useState<Dog[]>();
   const { favorites, toggle } = useFavoriteDogs();
@@ -103,11 +102,11 @@ export default function FavoritesPage() {
       {favorites.size === 0 ? (
         <div className="flex flex-col flex-1 p-6 bg-gradient-to-b from-blue-200 to-white items-center justify-center">
           <div className="text-lg font-medium mb-2 items-center">
-            {"You don’t have any favorites yet!"}
+            {`You don't have any favorites yet!`}
           </div>
           <div className="text-lg font-medium mb-2 items-center">
             {
-              "Head over to the search page to find some dogs you’d love to bring home."
+              `Head over to the search page to find some dogs you'd love to bring home.`
             }
           </div>
         </div>
