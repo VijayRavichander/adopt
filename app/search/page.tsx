@@ -63,7 +63,9 @@ export default function Search() {
           `${BACKEND_URL}/dogs/search?${query}`,
           { withCredentials: true }
         );
+
         setTotal(searchRes.data.total);
+
         const ids = searchRes.data.resultIds as string[];
 
         const detailRes = await axios.post(`${BACKEND_URL}/dogs`, ids, {
@@ -71,37 +73,29 @@ export default function Search() {
         });
 
         const detailedDogs: Dog[] = detailRes.data;
-        const uniqueZips = [...new Set(detailedDogs.map((d) => d.zip_code))];
+        const zips = detailedDogs.map((d) => String(d.zip_code));
 
-        const chunked = (arr: string[], size: number) =>
-          Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
-            arr.slice(i * size, i * size + size)
-          );
+        console.log(zips);
 
-        const locationPromises = chunked(uniqueZips, 100).map((chunk) =>
-          axios.post(`${BACKEND_URL}/locations`, chunk, {
+        const locationResponses = await axios.post(`${BACKEND_URL}/locations`, zips, {
             withCredentials: true,
-          })
-        );
+         })
+                
 
-        const locationResponses = await Promise.all(locationPromises);
-        const locations: Location[] = locationResponses.flatMap((r) => r.data);
+        const locations: Location[] = locationResponses.data;
 
-        const zipToLocation = new Map(
-          locations.map((loc) => [loc.zip_code, loc] as const)
-        );
 
-        const dogsWithLocation: DogWithLocation[] = detailedDogs.map((dog) => ({
-          ...dog,
-          location: zipToLocation.get(dog.zip_code),
+        const dogsWithLocation: DogWithLocation[] = detailedDogs.map((dog, i) => ({
+            ...dog,
+            location: locations[i] ?? null,   // null-guard in case the backend skipped a ZIP
         }));
 
         setDogs(dogsWithLocation);
 
         setIsLoading(false);
-      } catch {
-        router.push("/");
-        alert("Something went wrong! Try again.");
+      } catch(e){
+        // router.push("/");
+        alert(`${e} went wrong`);
       }
     };
     fetchDogs();
