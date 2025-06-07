@@ -1,0 +1,1 @@
+export const BACKEND_URL = "https://frontend-take-home-service.fetch.com"
