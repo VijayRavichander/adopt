@@ -160,7 +160,7 @@ export default function Search() {
       </div>
 
       {/* Main Section */}
-      <div className="relative flex flex-1 sm:overflow-hidden ">
+      <div className="relative flex flex-1">
         {/* ▶ Filter Sidebar */}
         <div
           className={`absolute left-0 top-0 h-full w-[250px] p-4
