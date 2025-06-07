@@ -75,7 +75,7 @@ export default function Search() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-200 to-white">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-300 to-white/40">
         <p className="text-2xl tracking-tight">
           Getting you to a special place…
         </p>
@@ -84,7 +84,7 @@ export default function Search() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-blue-200 to-white">
+    <div className="flex min-h-screen flex-col bg-gradient-to-b from-blue-300 to-white/40">
       {/* NavBar */}
       <div className="flex items-center justify-around  pb-5 pt-3 ">
         <header className="sticky top-0 z-50 flex min-w-screen justify-center  py-5">
@@ -96,7 +96,9 @@ export default function Search() {
                    ring-1 ring-white/40"
           >
             <p className="text-xl sm:text-3xl font-medium tracking-tight text-black/90">
+            <Link href="/search">
               <Dog className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
+            </Link>
             </p>
 
             <div className="flex space-x-4">
@@ -110,7 +112,7 @@ export default function Search() {
               </Link>
               <Button
                 variant="ghost"
-                className="text-xl hover:bg-transparent hover:underline"
+                className={`text-xl hover:bg-transparent hover:underline ${filterHide ? "" : "underline"}`}
                 onClick={() => setFilterHide((v) => !v)}
               >
                 Filter
@@ -121,11 +123,11 @@ export default function Search() {
       </div>
 
       {/* Main Section */}
-      <div className="relative flex flex-1 overflow-hidden">
+      <div className="relative flex flex-1 sm:overflow-hidden ">
         {/* ▶ Filter Sidebar */}
         <div
           className={`absolute left-0 top-0 h-full w-[250px] p-4
-                      transition-transform duration-500 ease-in-out
+                      transition-transform duration-500 ease-in-out 
                       ${
                         filterHide
                           ? "-translate-x-full opacity-0"
@@ -148,12 +150,12 @@ export default function Search() {
           `}
         >
           {dogs.length > 0 ? (
-            <>
+            <div className={` ${filterHide ? "" : "hidden"} sm:block`}>
               <Hero dogs={dogs} />
               <div className="mt-5 mb-20">
                 <PaginationComp totalResults={total} />
               </div>
-            </>
+            </div>
           ) : (
             <div className="flex justify-center items-center text-center text-gray-600 text-lg font-medium p-4">
               {"Sorry! We couldn’t find any matches for your search."}

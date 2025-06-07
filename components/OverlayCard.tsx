@@ -91,7 +91,7 @@ export default function DogCard({
           <img
             src={dog.img}
             alt={dog.name}
-            className="w-full h-72 object-cover object-center rounded-lg mb-6"
+            className="w-full max-h-[50vh] object-contain rounded-lg mb-6"
           />
 
           <div className="space-y-4">
@@ -108,4 +108,3 @@ export default function DogCard({
     </>
   );
 }
-

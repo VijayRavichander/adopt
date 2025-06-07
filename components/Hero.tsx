@@ -11,7 +11,7 @@ export default function Hero({ dogs }: { dogs: Dog[] }) {
 
   return (
     <div>
-      <div className="grid grid-cols-2 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl">
+      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl">
         {dogs.map((dog, index) => (
           <div
             key={dog.id}

@@ -43,8 +43,11 @@ export default function FavoritesPage() {
           );
           setFavDogs(dog_data_response.data);
         }
-
-        setIsLoading(false);
+        const timer = setTimeout(() => {
+          setIsLoading(false);
+        }, 2000); // 2-second delay
+    
+        return () => clearTimeout(timer);
       };
       fetchFavs();
     } catch (err) {
@@ -54,11 +57,14 @@ export default function FavoritesPage() {
 
   if (isLoading == true) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-200 to-white">
-        <p className="text-2xl tracking-tight">
-          {"Lets find a forever home for someone special…"}
-        </p>
-      </div>
+<div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-300 to-white/40">
+  <p className="text-2xl tracking-tight">
+    {"Let's find a forever home for someone special…"}
+  </p>
+  <span className="mt-4 text-sm italic text-gray-500">
+    (Psst... I might have added a tiny delay so you have time to read this 😉)
+  </span>
+</div>
     );
   }
 
@@ -74,17 +80,19 @@ export default function FavoritesPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-200 to-white ">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-blue-300 to-white/40 ">
       <header className="sticky top-0 z-50 flex min-w-screen justify-center  py-5">
         <nav
           className="mx-4 mt-4 flex w-full max-w-5xl items-center
                    justify-between gap-4
                    rounded-full px-6 py-2
-                   bg-white/20 backdrop-blur-3xl shadow-lg
+                   bg-white/90 backdrop-blur-3xl shadow-lg
                    ring-1 ring-white/40"
         >
           <p className="text-xl sm:text-3xl font-medium tracking-tight text-black/90">
-            <DogIcon className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
+          <Link href="/search">
+              <DogIcon className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
+          </Link>
           </p>
 
           <div className="flex space-x-4">
@@ -100,7 +108,7 @@ export default function FavoritesPage() {
         </nav>
       </header>
       {favorites.size === 0 ? (
-        <div className="flex flex-col flex-1 p-6 bg-gradient-to-b from-blue-200 to-white items-center justify-center">
+        <div className="flex flex-col flex-1 p-6 bg-gradient-to-b items-center justify-center">
           <div className="text-lg font-medium mb-2 items-center">
             {`You don't have any favorites yet!`}
           </div>
@@ -119,7 +127,7 @@ export default function FavoritesPage() {
                   <button
                     type="button"
                     onClick={getMatch}
-                    className="w-fit bg-[#2398f7] hover:bg-blue-400 text-black py-2 px-3 rounded-md overflow-hidden"
+                    className="w-fit bg-white  hover:bg-blue-400 text-black py-2 px-3 rounded-md overflow-hidden"
                   >
                     {/* keeps content clipped while we slide */}
                     <div className="relative h-6">
@@ -138,7 +146,8 @@ export default function FavoritesPage() {
               </div>
             </div>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 w-full max-w-6xl mx-4">
+          <div className="flex justify-center items-center my-5">
+          <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full max-w-6xl mx-4">
             {favDogs &&
               favDogs.map((dog) => (
                 <DogCard
@@ -150,6 +159,8 @@ export default function FavoritesPage() {
                 />
               ))}
           </div>
+          </div>
+
         </>
       )}
     </div>

@@ -159,7 +159,7 @@ export default function Filter({
 
   const handleChangeZipCode = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
+
     // Remove non-digit characters
     const numericValue = value.replace(/\D/g, "");
 
@@ -201,7 +201,7 @@ export default function Filter({
           <div className="font-bold text-lg">Sort</div>
           <div className="my-5">
             <Select defaultValue="breed" onValueChange={setSortBy}>
-              <SelectTrigger className="w-[180px] bg-white">
+              <SelectTrigger className="md:w-[180px] bg-white">
                 <SelectValue placeholder="Sort By" />
               </SelectTrigger>
               <SelectContent>
