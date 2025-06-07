@@ -91,7 +91,7 @@ export function LoginForm() {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="m@example.com"
+                      placeholder="john@example.com"
                       {...field}
                     />
                   </FormControl>
@@ -107,7 +107,7 @@ export function LoginForm() {
                 <FormItem className="grid gap-2">
                   <FormLabel htmlFor="name">Name</FormLabel>
                   <FormControl>
-                    <Input id="name" type="text" {...field} />
+                    <Input id="name" type="text"  placeholder="John"{...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
