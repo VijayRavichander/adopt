@@ -145,12 +145,6 @@ export default function Filter({
         Number(item.zip_code)
       );
 
-      const allNumbers = zipCodes.every(
-        (z) => typeof z === "number" && Number.isFinite(z)
-      );
-
-      console.log(allNumbers);
-
       setSelectedZipCodes((prevSet) => new Set([...prevSet, ...zipCodes]));
     } else {
       console.error("Geolocation is not supported by this browser.");

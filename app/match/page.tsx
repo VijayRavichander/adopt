@@ -29,68 +29,61 @@ export default function FavoritesPage() {
   }, []);
 
   useEffect(() => {
-    try {
-      const fetchFavs = async () => {
+    const fetchFavs = async () => {
+      try {
         const favs = Array.from(favorites);
 
         if (favs.length > 0) {
           const dog_data_response = await axios.post(
             `${BACKEND_URL}/dogs`,
             favs,
-            {
-              withCredentials: true,
-            }
+            { withCredentials: true }
           );
           const detailedDogs: Dog[] = dog_data_response.data;
           const uniqueZips = [...new Set(detailedDogs.map((d) => d.zip_code))];
-  
+
           const chunked = (arr: string[], size: number) =>
             Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
               arr.slice(i * size, i * size + size)
             );
-  
+
           const locationPromises = chunked(uniqueZips, 100).map((chunk) =>
             axios.post(`${BACKEND_URL}/locations`, chunk, {
               withCredentials: true,
             })
           );
-  
+
           const locationResponses = await Promise.all(locationPromises);
           const locations: Location[] = locationResponses.flatMap((r) => r.data);
-  
+
           const zipToLocation = new Map(
             locations.map((loc) => [loc.zip_code, loc] as const)
           );
-  
+
           const dogsWithLocation: DogWithLocation[] = detailedDogs.map((dog) => ({
             ...dog,
             location: zipToLocation.get(dog.zip_code),
           }));
-  
+
           setFavDogs(dogsWithLocation);
         }
-        const timer = setTimeout(() => {
-          setIsLoading(false);
-        }, 2000); // 2-second delay
-    
-        return () => clearTimeout(timer);
-      };
-      fetchFavs();
-    } catch (err) {
-      console.error("Failed to load favourites", err);
-    }
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Failed to load favourites", err);
+        setIsLoading(false);
+      }
+    };
+
+    fetchFavs();
   }, [favorites]);
 
-  if (isLoading == true) {
+  if (isLoading) {
     return (
-<div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-300 to-white/40">
-  <p className="text-2xl tracking-tight">
-    {"Let's find a forever home for someone special…"}
-  </p>
-  <span className="mt-4 text-sm italic text-gray-500">
-    (Psst... I might have added a tiny delay so you have time to read this 😉)
-  </span>
-</div>
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-blue-300 to-white/40">
+        <p className="text-2xl tracking-tight">
+          {"Let's find a forever home for someone special…"}
+        </p>
+      </div>
     );
   }
 

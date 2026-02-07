@@ -9,7 +9,7 @@ import PaginationComp from "@/components/Pagination";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Dog } from "lucide-react";
+import { Dog as DogIcon } from "lucide-react";
 
 export interface Dog {
   id: string;
@@ -75,27 +75,27 @@ export default function Search() {
         const detailedDogs: Dog[] = detailRes.data;
         const zips = detailedDogs.map((d) => String(d.zip_code));
 
-        console.log(zips);
-
-        const locationResponses = await axios.post(`${BACKEND_URL}/locations`, zips, {
-            withCredentials: true,
-         })
-                
+        const locationResponses = await axios.post(
+          `${BACKEND_URL}/locations`,
+          zips,
+          { withCredentials: true }
+        );
 
         const locations: Location[] = locationResponses.data;
 
-
-        const dogsWithLocation: DogWithLocation[] = detailedDogs.map((dog, i) => ({
+        const dogsWithLocation: DogWithLocation[] = detailedDogs.map(
+          (dog, i) => ({
             ...dog,
-            location: locations[i] ?? null,   // null-guard in case the backend skipped a ZIP
-        }));
+            location: locations[i] ?? null,
+          })
+        );
 
         setDogs(dogsWithLocation);
-
         setIsLoading(false);
-      } catch(e){
-        // router.push("/");
-        alert(`${e} went wrong`);
+      } catch (error) {
+        console.error("Error fetching dogs:", error);
+        setIsLoading(false);
+        alert("Failed to fetch dogs. Please try again.");
       }
     };
     fetchDogs();
@@ -126,7 +126,7 @@ export default function Search() {
           >
             <p className="text-xl sm:text-3xl font-medium tracking-tight text-black/90">
               <Link href="/search">
-                <Dog className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
+                <DogIcon className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
               </Link>
             </p>
 
