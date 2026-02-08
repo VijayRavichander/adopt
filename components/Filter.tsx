@@ -7,6 +7,7 @@ import { DeleteIcon, House, Search } from "lucide-react";
 import { getDiagonalBounds } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import AnimatedButton from "@/components/AnimatedButton";
 
 import {
   Select,
@@ -233,51 +234,25 @@ export default function Filter({
             {zipError && (
               <p className="text-red-500 text-xs my-2">{zipError}</p>
             )}
-            <div className="flex-col gap-2">
-              <div className="relative group inline-block w-full my-2">
-                <button
-                  type="button"
-                  onClick={addZipCode}
-                  className=" mx-auto w-4/5 bg-[#2398f7] hover:bg-blue-500 text-white py-2 px-4 rounded-md overflow-hidden"
-                >
-                  {/* keeps content clipped while we slide */}
-                  <div className="relative h-6">
-                    {/* “Search” slides out to the right on hover */}
-                    <span className="absolute inset-0 flex items-center tracking-tight text-pretty justify-center transition-transform duration-500 group-hover:translate-x-full">
-                      Search
-                    </span>
-
-                    {/* 📍 slides in from the left on hover */}
-                    <span className="absolute inset-0 flex items-center  justify-center transition-transform duration-500 -translate-x-full group-hover:translate-x-0">
-                      <Search />
-                    </span>
-                  </div>
-                </button>
-              </div>
+            <div className="flex justify-center">
+              <AnimatedButton
+                onClick={addZipCode}
+                text="Search"
+                icon={<Search />}
+                variant="primary"
+                className="w-4/5 bg-[#2398f7] hover:bg-blue-500"
+              />
             </div>
           </div>
           <div>
-            <div className="flex-col gap-2">
-              <div className="relative group inline-block w-full my-2">
-                <button
-                  type="button"
-                  onClick={getLocation}
-                  className="mx-auto w-4/5 bg-[#2398f7] hover:bg-blue-500 text-white py-2 px-4 rounded-md overflow-hidden"
-                >
-                  {/* keeps content clipped while we slide */}
-                  <div className="relative h-6">
-                    {/* Pets Near Me slides out to the right on hover */}
-                    <span className="absolute inset-0 tracking-tight text-pretty flex items-center justify-center transition-transform duration-500 group-hover:translate-x-full">
-                      Pets Near Me
-                    </span>
-
-                    {/*  slides in from the left on hover */}
-                    <span className="absolute inset-0 flex items-center justify-center transition-transform duration-500 -translate-x-full group-hover:translate-x-0">
-                      <House />
-                    </span>
-                  </div>
-                </button>
-              </div>
+            <div className="flex justify-center">
+              <AnimatedButton
+                onClick={getLocation}
+                text="Pets Near Me"
+                icon={<House />}
+                variant="primary"
+                className="w-4/5 bg-[#2398f7] hover:bg-blue-500"
+              />
             </div>
           </div>
         </div>

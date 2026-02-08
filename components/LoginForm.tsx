@@ -24,17 +24,16 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-
 import { Input } from "@/components/ui/input";
 
 import { BACKEND_URL } from "@/app/config";
+import AnimatedButton from "@/components/AnimatedButton";
 
 // ---------- validation schema ----------
 const loginSchema = z.object({
   email: z.string().email({ message: "Enter a valid email" }),
   name: z.string().min(1, { message: "Name is required" }),
 });
-
 
 type LoginValues = z.infer<typeof loginSchema>;
 
@@ -56,7 +55,7 @@ export function LoginForm() {
         {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
-        },
+        }
       );
       if (res.status === 200) {
         router.push("/search?sort=breed:asc&size=24&from=0");
@@ -95,7 +94,7 @@ export function LoginForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormMessage /> 
+                  <FormMessage />
                 </FormItem>
               )}
             />
@@ -107,7 +106,12 @@ export function LoginForm() {
                 <FormItem className="grid gap-2">
                   <FormLabel htmlFor="name">Name</FormLabel>
                   <FormControl>
-                    <Input id="name" type="text"  placeholder="John"{...field} />
+                    <Input
+                      id="name"
+                      type="text"
+                      placeholder="John"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,24 +119,14 @@ export function LoginForm() {
             />
           </CardContent>
 
-          {/* button sits in the CardFooter to preserve your original layout */}
           <CardFooter className="flex-col gap-2 my-3">
-            {/* your original “🐶 slide” button kept as-is */}
-            <div className="relative group inline-block w-full">
-              <button
-                type="submit"
-                className="w-full bg-blue-400 text-white font-semibold py-2 px-4 rounded-md overflow-hidden"
-              >
-                <div className="relative h-6">
-                  <span className="absolute inset-0 flex items-center justify-center transition-transform duration-500 group-hover:translate-x-full">
-                    Login
-                  </span>
-                  <span className="absolute inset-0 flex items-center justify-center transition-transform duration-500 -translate-x-full group-hover:translate-x-0">
-                    🐶
-                  </span>
-                </div>
-              </button>
-            </div>
+            <AnimatedButton
+              type="submit"
+              text="Login"
+              icon="🐶"
+              variant="primary"
+              fullWidth
+            />
           </CardFooter>
         </form>
       </Form>

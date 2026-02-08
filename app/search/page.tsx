@@ -8,8 +8,8 @@ import Filter from "@/components/Filter";
 import PaginationComp from "@/components/Pagination";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { Dog as DogIcon } from "lucide-react";
+import AppHeader from "@/components/AppHeader";
+import LoadingScreen from "@/components/LoadingScreen";
 
 export interface Dog {
   id: string;
@@ -103,54 +103,26 @@ export default function Search() {
   }, [searchParams]);
 
   if (isLoading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-300 to-white/40">
-        <p className="text-2xl tracking-tight">
-          Getting you to a special place…
-        </p>
-      </div>
-    );
+    return <LoadingScreen message="Getting you to a special place…" />;
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-b from-blue-300 to-white/40">
       {/* NavBar */}
-      <div className="flex items-center justify-around  pb-5 pt-3 ">
-        <header className="sticky top-0 z-50 flex min-w-screen justify-center  py-5">
-          <nav
-            className="mx-4 mt-4 flex w-full max-w-5xl items-center
-                   justify-between gap-4
-                   rounded-full px-6 py-2
-                   bg-white/90 backdrop-blur-3xl shadow-lg
-                   ring-1 ring-white/40"
+      <div className="flex items-center justify-around pb-5 pt-3">
+        <AppHeader
+          links={[{ href: "/match", label: "Favs" }]}
+        >
+          <Button
+            variant="ghost"
+            className={`text-lg sm:text-2xl hover:bg-transparent hover:underline ${
+              filterHide ? "" : "underline"
+            }`}
+            onClick={() => setFilterHide((v) => !v)}
           >
-            <p className="text-xl sm:text-3xl font-medium tracking-tight text-black/90">
-              <Link href="/search">
-                <DogIcon className="inline h-8 w-8 sm:h-10 sm:w-10" /> Adopt
-              </Link>
-            </p>
-
-            <div className="flex space-x-4">
-              <Link href="/match">
-                <Button
-                  variant="ghost"
-                  className="text-xl sm:text-xl hover:bg-transparent hover:underline"
-                >
-                  Favs
-                </Button>
-              </Link>
-              <Button
-                variant="ghost"
-                className={`text-xl hover:bg-transparent hover:underline ${
-                  filterHide ? "" : "underline"
-                }`}
-                onClick={() => setFilterHide((v) => !v)}
-              >
-                Filter
-              </Button>
-            </div>
-          </nav>
-        </header>
+            Filter
+          </Button>
+        </AppHeader>
       </div>
 
       {/* Main Section */}
