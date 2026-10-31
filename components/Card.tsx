@@ -13,7 +13,7 @@ export default function DogCard({
 }) {
   const favClick = () => {
     if (favorites.has(dog.id)) {
-      toast("Removed to your Favs");
+      toast("Removed from your Favs");
     } else {
       toast("Added to your Favs");
     }
@@ -55,7 +55,7 @@ export default function DogCard({
             onClick={favClick}
             className="w-fit mt-2 text-xs bg-fuchsia-600 hover:bg-fuchsia-700 dark:bg-fuchsia-500 dark:hover:bg-fuchsia-600 text-white"
           >
-            {favorites.has(dog.id) ? "Removed Favorites" : "Added Favorites"}
+            {favorites.has(dog.id) ? "Remove from Favorites" : "Add to Favorites"}
           </Button>
         </div>
       </div>
